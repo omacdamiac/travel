@@ -1,0 +1,186 @@
+<div class="row">
+    <div class="col-6">
+        <h1>Nuevo Cliente</h1>
+    </div>
+    <div class="col-6 text-end">
+        <button mat-raised-button [disabled]="!form.valid" (click)="save()">Guardar</button>
+    </div>
+  </div>
+
+<form class="example-form" [formGroup]="form" novalidate>
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="nombre"
+            placeholder="Nombre"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="direccion"
+            placeholder="Direccion"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-3">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="telefono"
+            placeholder="Teléfono"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="celular"
+            placeholder="Celular"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="promotor"
+            placeholder="Promotor"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-3">
+        <mat-form-field class="example-full-width">
+          <input
+            type="text"
+            matInput
+            formControlName="credito"
+            placeholder="Credito"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <h2>Documentos</h2>
+      </div>
+      <div class="col-6 text-end">
+        <button mat-raised-button (click)="add()">Agregar Documento</button>
+      </div>
+    </div>
+
+    <div formArrayName="documentos">
+      <div class="row"
+        [formGroupName]="i"
+        *ngFor="
+          let direccion of getArrayControls();
+          let i = index
+        "
+      >
+        <div class="col-2">
+          <mat-form-field class="example-full-width">
+            <input
+              type="text"
+              matInput
+              formControlName="comprobante"
+              placeholder="Comprobante"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Moneda</mat-label>
+            <mat-select formControlName="moneda">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let state of moneda" [value]="state">{{
+                state
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Sucursal</mat-label>
+            <mat-select formControlName="sucursal">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let state of sucursal" [value]="state">{{
+                state
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field class="example-full-width">
+            <input
+              type="text"
+              matInput
+              formControlName="montoCobrar"
+              placeholder="Monto a Cobrar"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field class="example-full-width">
+            <input
+              type="text"
+              matInput
+              formControlName="montoPendiente"
+              placeholder="Monto pendiente"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field appearance="fill">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              (dateChange)="mes($event.value)"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field class="example-full-width">
+            <input
+              type="text"
+              matInput
+              formControlName="fechaVencimiento"
+              placeholder="Fecha de vencimiento"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Condición</mat-label>
+            <mat-select formControlName="condicion">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let state of condicion" [value]="state">{{
+                state
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-raised-button (click)="deleteDoc(i)">Eliminar</button>
+        </div>
+        <hr />
+      </div>
+    </div>
+  </div>
+</form>

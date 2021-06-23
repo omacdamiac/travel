@@ -1,0 +1,29 @@
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  td, th {
+    width: 25%;
+    padding:5px!important;
+  }
+  .no{
+      width: auto;
+      text-align: center;
+  }
+  a{
+  &>.mat-icon{
+      color:#fdad00;
+      margin: 0 auto;
+      cursor: pointer;
+  }
+  & + span{
+      color: #666;
+      display: block;
+      font-size: 10px;
+  }
+}
