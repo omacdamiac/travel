@@ -10,6 +10,8 @@ import { ClientesService } from '../../services/clientes.service';
 })
 export class NewClientesComponent implements OnInit {
   form!: FormGroup;
+  documento!: FormGroup;
+  textoDeInput = 'C'
   constructor(
     private clientesServices: ClientesService,
     private router: Router,
@@ -21,33 +23,89 @@ export class NewClientesComponent implements OnInit {
 
   createForm() {
     this.form = new FormGroup({
-      'nombre': new FormControl('', Validators.required),
-      'direccion': new FormControl('', Validators.required),
-      'telefono': new FormControl('', Validators.required),
-      'celular': new FormControl('', Validators.required),
-      'promotor': new FormControl('', Validators.required),
-      'credito': new FormControl('', Validators.required),
+      NombreCliente: new FormControl('', Validators.required),
+      Direccion: new FormControl('', Validators.required),
+      RequiereComisionista: new FormControl(false, Validators.required),
+      CorreoElectronico: new FormControl('', Validators.required),
+      AerolineasConConvenio: new FormControl(null),
+      Telefonos: new FormArray([]),
+      LimiteDeCredito: new FormControl('', Validators.required),
+      ClasificacionNivel2: new FormControl('', Validators.required),
+      EsEmpresaDelGrupo: new FormControl(false, Validators.required),
+      PermiteEmisionConTarjeta: new FormControl(false, Validators.required),
+      SoloEmitirFacturaAgencia: new FormControl(false, Validators.required),
+      IdGrupo: new FormControl('', Validators.required),
+      Promotor: new FormGroup({
+        IdPromotor: new FormControl('', Validators.required),
+        Nombre: new FormControl('', Validators.required),
+        CorreoElectronico: new FormControl('', Validators.required),
+      }),
+      CondicionPago: new FormGroup({
+        IdCondicionPago: new FormControl('', Validators.required),
+        Descripcion: new FormControl(''),
+        CantidadDeDias: new FormControl('', Validators.required),
+      }),
+      TipoCliente: new FormGroup({
+        IdTipo: new FormControl('', Validators.required),
+        Descripcion: new FormControl(''),
+      }),
+      Documento: new FormGroup({
+        IdDocumento: new FormControl('', Validators.required),
+        Descripcion: new FormControl(''),
+        NumeroDocumento: new FormControl('', Validators.required),
+      }),
+      Morosidad: new FormGroup({
+        MensajeMorosidad: new FormControl(''),
+        DeudaTotal: new FormControl(''),
+        BloquearEmision: new FormControl(''),
+        DocumentosVencidos: new FormArray([])
+      }),
+      LineaCredito: new FormControl('', Validators.required),
+      EsGoldenLine: new FormControl(false, Validators.required),
+      AutorizaEmisionConFComisionPendiente: new FormControl(false, Validators.required),
+      MontoMaximoMorosidad: new FormControl('', Validators.required),
+      idSucursal: new FormControl('', Validators.required),
+      idPtoVenta: new FormControl('', Validators.required),
 
-      'documentos': new FormArray([])
+    });
 
-    })
+    this.documento = new FormGroup({
+      DocumentosVencidos: new FormArray([])
+    });
+
+
+    this.addTelefono()
+    this.addTelefono()
   }
 
   save() {
-    console.log(this.form.value);
+    let morosidad = this.form.value.Morosidad.DocumentosVencidos;
+    let documentosVencidos = this.documento.value.DocumentosVencidos;
+
+    morosidad.push(documentosVencidos[0]);
     this.clientesServices.newCliente(this.form.value).subscribe(
       _=> {
-        this.router.navigateByUrl('clientes/lista');
-      }
-    )
+      this.router.navigateByUrl('/business-flow/clientes/lista');
+        })
   }
 
   getArrayControls() {
-    return (<FormArray>this.form.get('documentos')).controls;
+    return (<FormArray>this.documento.get('DocumentosVencidos')).controls;
   }
 
-  add(){
-    (<FormArray>this.form.controls['documentos']).push(new FormGroup({
+  getArrayTelefonoControls() {
+    return (<FormArray>this.form.get('Telefonos')).controls;
+  }
+
+  addTelefono() {
+    (<FormArray>this.form.controls['Telefonos']).push(new FormGroup({
+      'Clave': new FormControl(''),
+      'Valor': new FormControl('', Validators.required),
+    }));
+  }
+
+  addDocument(){
+    (<FormArray>this.documento.controls['DocumentosVencidos']).push(new FormGroup({
       comprobante: new FormControl('', Validators.required),
       moneda: new FormControl('', Validators.required),
       sucursal: new FormControl('', Validators.required),
@@ -59,7 +117,7 @@ export class NewClientesComponent implements OnInit {
   }
 
   deleteDoc(index: number) {
-    (<FormArray>this.form.controls['documentos']).removeAt(index);
+    (<FormArray>this.documento.controls['DocumentosVencidos']).removeAt(index);
   }
 
   mes(e: any){
@@ -78,13 +136,30 @@ export class NewClientesComponent implements OnInit {
   moneda: string[] = [
     'USD', 'Soles'
   ];
-
   sucursal: string[] = [
     'Pardo', 'Navarrete', 'Otro'
   ];
-
   condicion: string[] = [
     '07D', 'OK', '08D'
   ];
-
+  ClasificacionNivel2: string[] = [
+    'SMART', 'OTRO'
+  ];
+  IdGrupo: string[] = [
+    'CAC', 'OTRO'
+  ];
+  tipoCliente:string[] = [
+    'AGENCIA', 'OTRO'
+  ];
+  IdDocumento:string[] = [
+    'RUC', 'DNI'
+  ];
+  idSucursal = [
+    {text: 'PARDO', value: 1},
+    {text: 'SAN ISIDRO', value: 0}
+  ];
+  idPtoVenta = [
+    {text: 'AGENCIA', value: 120},
+    {text: 'EMPRESA', value: 100}
+  ];
 }

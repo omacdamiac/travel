@@ -41,8 +41,13 @@ export class ListClientesComponent implements AfterViewInit {
     this.getListClientes()
   }
 
-  edit(e: any): void{
-    console.log(e.Morosidad[0].DocumentosVencidos);
+  delete(e: any): void{
+    // console.log(e.Morosidad[0].DocumentosVencidos);
+    console.log(e);
+    this.clientesServices.delete(e).subscribe( data => {
+      console.log('Eliminado');
+      
+    })
   }
 
   view(){

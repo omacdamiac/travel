@@ -20,7 +20,12 @@ export class ClientesService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(`${url_api}`, cliente, {headers});
+    return this.http.post(`${url_api}`, cliente);
+  }
+
+  delete(e: any) {
+    const url_api = `${environment.API_BASE}${ENDPOINT_CLIENTES.LIST}/e`;
+    return this.http.delete(url_api);
   }
 
 }
