@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ClientesService } from '../../services/clientes.service';
 
 @Component({
   selector: 'app-new-clientes',
   templateUrl: './new-clientes.component.html',
-  styleUrls: ['./new-clientes.component.scss']
+  styleUrls: ['./new-clientes.component.scss'],
 })
 export class NewClientesComponent implements OnInit {
   form!: FormGroup;
   documento!: FormGroup;
-  textoDeInput = 'C'
+  textoDeInput = 'C';
   constructor(
     private clientesServices: ClientesService,
     private router: Router,
-  ) { }
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
     this.createForm();
@@ -58,35 +60,42 @@ export class NewClientesComponent implements OnInit {
         MensajeMorosidad: new FormControl(''),
         DeudaTotal: new FormControl(''),
         BloquearEmision: new FormControl(''),
-        DocumentosVencidos: new FormArray([])
+        DocumentosVencidos: new FormArray([]),
       }),
       LineaCredito: new FormControl('', Validators.required),
       EsGoldenLine: new FormControl(false, Validators.required),
-      AutorizaEmisionConFComisionPendiente: new FormControl(false, Validators.required),
+      AutorizaEmisionConFComisionPendiente: new FormControl(
+        false,
+        Validators.required
+      ),
       MontoMaximoMorosidad: new FormControl('', Validators.required),
       idSucursal: new FormControl('', Validators.required),
       idPtoVenta: new FormControl('', Validators.required),
-
     });
 
     this.documento = new FormGroup({
-      DocumentosVencidos: new FormArray([])
+      DocumentosVencidos: new FormArray([]),
     });
 
-
-    this.addTelefono()
-    this.addTelefono()
+    this.addTelefono();
+    this.addTelefono();
   }
 
   save() {
     let morosidad = this.form.value.Morosidad.DocumentosVencidos;
     let documentosVencidos = this.documento.value.DocumentosVencidos;
+    console.log(documentosVencidos);
+    
+    for (const i of documentosVencidos) {
+      morosidad.push(i);      
+    }
 
-    morosidad.push(documentosVencidos[0]);
-    this.clientesServices.newCliente(this.form.value).subscribe(
-      _=> {
+    this.clientesServices.newCliente(this.form.value).subscribe((data: any) => {
+      this.toastr.success(data.alert, 'Exito')
       this.router.navigateByUrl('/business-flow/clientes/lista');
-        })
+    },
+    err => console.log(err)
+    );
   }
 
   getArrayControls() {
@@ -98,68 +107,75 @@ export class NewClientesComponent implements OnInit {
   }
 
   addTelefono() {
-    (<FormArray>this.form.controls['Telefonos']).push(new FormGroup({
-      'Clave': new FormControl(''),
-      'Valor': new FormControl('', Validators.required),
-    }));
+    (<FormArray>this.form.controls['Telefonos']).push(
+      new FormGroup({
+        Clave: new FormControl(''),
+        Valor: new FormControl('', Validators.required),
+      })
+    );
   }
 
-  addDocument(){
-    (<FormArray>this.documento.controls['DocumentosVencidos']).push(new FormGroup({
-      comprobante: new FormControl('', Validators.required),
-      moneda: new FormControl('', Validators.required),
-      sucursal: new FormControl('', Validators.required),
-      montoCobrar: new FormControl('', Validators.required),
-      montoPendiente: new FormControl('', Validators.required),
-      fechaVencimiento: new FormControl('', Validators.required),
-      condicion: new FormControl('', Validators.required),
-    }));
+  addDocument() {
+    (<FormArray>this.documento.controls['DocumentosVencidos']).push(
+      new FormGroup({
+        Comprobante: new FormControl('', Validators.required),
+        Moneda: new FormControl('', Validators.required),
+        Sucursal: new FormControl('', Validators.required),
+        MontoACobrar: new FormControl('', Validators.required),
+        MontoPendiente: new FormControl('', Validators.required),
+        FechaEmision: new FormControl('', Validators.required),
+        FechaVencimiento: new FormControl('', Validators.required),
+        CondicionPago: new FormControl('', Validators.required),
+      })
+    );
   }
 
   deleteDoc(index: number) {
     (<FormArray>this.documento.controls['DocumentosVencidos']).removeAt(index);
   }
 
-  mes(e: any){
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  mes(e: any) {
+    const months = [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC',
+    ];
 
     const day = e?.getDate();
     const month = e?.getMonth();
     const year = e?.getFullYear();
 
-    console.log(`${day} ${months[month]} ${year}` );
+    console.log(`${day} ${months[month]} ${year}`);
     const fecha = `${day} ${months[month]} ${year}`;
 
-    this.form.addControl('fechaEmision', new FormControl(fecha, Validators.required));
+    this.form.addControl(
+      'FechaEmision',
+      new FormControl(fecha, Validators.required)
+    );
   }
 
-  moneda: string[] = [
-    'USD', 'Soles'
-  ];
-  sucursal: string[] = [
-    'Pardo', 'Navarrete', 'Otro'
-  ];
-  condicion: string[] = [
-    '07D', 'OK', '08D'
-  ];
-  ClasificacionNivel2: string[] = [
-    'SMART', 'OTRO'
-  ];
-  IdGrupo: string[] = [
-    'CAC', 'OTRO'
-  ];
-  tipoCliente:string[] = [
-    'AGENCIA', 'OTRO'
-  ];
-  IdDocumento:string[] = [
-    'RUC', 'DNI'
-  ];
+  moneda: string[] = ['USD', 'Soles'];
+  sucursal: string[] = ['Pardo', 'Navarrete', 'Otro'];
+  condicion: string[] = ['07D', 'OK', '08D'];
+  ClasificacionNivel2: string[] = ['SMART', 'OTRO'];
+  IdGrupo: string[] = ['CAC', 'OTRO'];
+  tipoCliente: string[] = ['AGENCIA', 'OTRO'];
+  IdDocumento: string[] = ['RUC', 'DNI'];
   idSucursal = [
-    {text: 'PARDO', value: 1},
-    {text: 'SAN ISIDRO', value: 0}
+    { text: 'PARDO', value: 1 },
+    { text: 'SAN ISIDRO', value: 0 },
   ];
   idPtoVenta = [
-    {text: 'AGENCIA', value: 120},
-    {text: 'EMPRESA', value: 100}
+    { text: 'AGENCIA', value: 120 },
+    { text: 'EMPRESA', value: 100 },
   ];
 }

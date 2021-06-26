@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogDocComponent } from 'src/app/commons/components/dialog-doc/dialog-doc.component';
 import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator";
 import {TooltipPosition} from '@angular/material/tooltip';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-list-clientes',
@@ -27,6 +28,7 @@ export class ListClientesComponent implements AfterViewInit {
     private clientesServices: ClientesService,
     public dialog: MatDialog,
     private paginato: MatPaginatorIntl,
+    private toastr: ToastrService,
   ) {
         this.dataSource = new MatTableDataSource();
         this.paginato.itemsPerPageLabel = "Registros por página";
@@ -38,17 +40,22 @@ export class ListClientesComponent implements AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getListClientes()
+    this.getListClientes();
   }
 
   delete(e: any): void{
-    // console.log(e.Morosidad[0].DocumentosVencidos);
-    console.log(e);
-    this.clientesServices.delete(e).subscribe( data => {
-      console.log('Eliminado');
+    this.clientesServices.delete(e._id).subscribe( (data: any) => {
+      console.log(data);
+      this.getListClientes();
+      this.toastr.success(data.alert, 'Exito')
+    },
+    err => {
+      console.log(err);
+      this.toastr.error('Error al eliminar cliente', 'Error')
       
     })
   }
+
 
   view(){
     console.log('Ver');
@@ -67,7 +74,9 @@ export class ListClientesComponent implements AfterViewInit {
   getListClientes() {
     this.clientesServices.getClientes().subscribe((data: any) => {
       this.dataSource = new MatTableDataSource(data?.clientes)
-    });
+    },
+    error => console.log(error)
+    );
   }
 
   ngAfterViewInit() {    console.log(this.paginato);

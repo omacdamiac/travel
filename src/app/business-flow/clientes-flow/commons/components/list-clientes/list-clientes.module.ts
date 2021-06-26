@@ -5,6 +5,7 @@ import { ClientesService } from '../../services/clientes.service';
 import { MaterialModule } from 'src/app/material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { DialogDocModule } from 'src/app/commons/components/dialog-doc/dialog-doc.module';
+import { ToastrModule } from 'ngx-toastr';
 
 
 

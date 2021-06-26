@@ -24,7 +24,7 @@ export class DialogDocComponent implements AfterViewInit {
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.data?.DocumentosVencidos);
-    console.log(this.dataSource);
+    console.log(this.data?.DocumentosVencidos);
   }
 
   ngAfterViewInit() {

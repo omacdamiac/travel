@@ -61,38 +61,29 @@ const borrarCliente = async(req, res = response) =>{
     var response = '';
   
     try {
-
         // validar si el usuario es el de la sesion
         const uid = req.params.id;
-
-        const clienteDB = await Cliente.findById( uid );
-
+        const clienteDB = await Cliente.findById(uid);
+        console.log(uid);
         if ( !clienteDB ){
-
             status = 'error';
             alert = 'Cliente no existe';
-
         }else{
-
-            await Cliente.findOneAndDelete( uid );
-
+            await Cliente.findByIdAndRemove(uid);
             status = 'success';
             alert = 'Cliente eliminado';
-            
-        }
-        
+        }     
     } catch (error) {
         console.log(error);
         status = 'error';
         alert = error;
-    }finally{
+    } finally {
         res.json({
             status: status,
             alert: alert,
             response: response
         })
     }
-    
 }
 
 module.exports = {

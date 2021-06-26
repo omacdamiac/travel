@@ -24,7 +24,7 @@ export class ClientesService {
   }
 
   delete(e: any) {
-    const url_api = `${environment.API_BASE}${ENDPOINT_CLIENTES.LIST}/e`;
+    const url_api = `${environment.API_BASE}${ENDPOINT_CLIENTES.LIST}/${e}`;
     return this.http.delete(url_api);
   }
 

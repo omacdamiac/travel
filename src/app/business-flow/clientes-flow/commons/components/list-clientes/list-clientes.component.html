@@ -85,8 +85,8 @@
         opciones
       </th>
       <td class="no" mat-cell *matCellDef="let row">
-        <a (click)="delete(row._id)" #tooltip="matTooltip"
-        matTooltip="Editar" matTooltipPosition="above" matTooltipHideDelay="100">
+        <a (click)="delete(row)" #tooltip="matTooltip"
+        matTooltip="Eliminar" matTooltipPosition="above" matTooltipHideDelay="100">
             <mat-icon>delete</mat-icon>
         </a>
         <!-- <a (click)="view()"><mat-icon>search</mat-icon></a> -->

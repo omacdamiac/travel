@@ -353,7 +353,7 @@
                   <input
                     type="text"
                     matInput
-                    formControlName="comprobante"
+                    formControlName="Comprobante"
                     placeholder="Comprobante"
                   />
                 </mat-form-field>
@@ -361,7 +361,7 @@
               <div class="col-2">
                 <mat-form-field appearance="fill">
                   <mat-label>Moneda</mat-label>
-                  <mat-select formControlName="moneda">
+                  <mat-select formControlName="Moneda">
                     <mat-option>None</mat-option>
                     <mat-option *ngFor="let state of moneda" [value]="state">{{
                       state
@@ -372,7 +372,7 @@
               <div class="col-2">
                 <mat-form-field appearance="fill">
                   <mat-label>Sucursal</mat-label>
-                  <mat-select formControlName="sucursal">
+                  <mat-select formControlName="Sucursal">
                     <mat-option>None</mat-option>
                     <mat-option
                       *ngFor="let state of sucursal"
@@ -387,7 +387,7 @@
                   <input
                     type="text"
                     matInput
-                    formControlName="montoCobrar"
+                    formControlName="MontoACobrar"
                     placeholder="Monto a Cobrar"
                   />
                 </mat-form-field>
@@ -397,7 +397,7 @@
                   <input
                     type="text"
                     matInput
-                    formControlName="montoPendiente"
+                    formControlName="MontoPendiente"
                     placeholder="Monto pendiente"
                   />
                 </mat-form-field>
@@ -406,8 +406,8 @@
                 <mat-form-field appearance="fill">
                   <input
                     matInput
+                    formControlName="FechaEmision"
                     [matDatepicker]="picker"
-                    (dateChange)="mes($event.value)"
                   />
                   <mat-datepicker-toggle
                     matSuffix
@@ -421,7 +421,7 @@
                   <input
                     type="text"
                     matInput
-                    formControlName="fechaVencimiento"
+                    formControlName="FechaVencimiento"
                     placeholder="Fecha de vencimiento"
                   />
                 </mat-form-field>
@@ -429,7 +429,7 @@
               <div class="col-2">
                 <mat-form-field appearance="fill">
                   <mat-label>Condición</mat-label>
-                  <mat-select formControlName="condicion">
+                  <mat-select formControlName="CondicionPago">
                     <mat-option>None</mat-option>
                     <mat-option
                       *ngFor="let state of condicion"
